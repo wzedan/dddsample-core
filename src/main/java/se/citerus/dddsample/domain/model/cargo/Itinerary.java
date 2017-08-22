@@ -5,6 +5,9 @@ import se.citerus.dddsample.domain.model.handling.HandlingEvent;
 import se.citerus.dddsample.domain.model.location.Location;
 import se.citerus.dddsample.domain.shared.ValueObject;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Embeddable;
+import javax.persistence.OneToMany;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -13,8 +16,10 @@ import java.util.List;
  * An itinerary.
  *
  */
+@Embeddable
 public class Itinerary implements ValueObject<Itinerary> {
 
+  @OneToMany(cascade = CascadeType.ALL)
   private List<Leg> legs = Collections.emptyList();
 
   static final Itinerary EMPTY_ITINERARY = new Itinerary();
@@ -160,6 +165,6 @@ public class Itinerary implements ValueObject<Itinerary> {
     // Needed by Hibernate
   }
 
-  // Auto-generated surrogate key
-  private Long id;
+//  // Auto-generated surrogate key
+//  private Long id;
 }

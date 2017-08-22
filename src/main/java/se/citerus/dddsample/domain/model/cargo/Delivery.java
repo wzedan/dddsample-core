@@ -3,8 +3,6 @@ package se.citerus.dddsample.domain.model.cargo;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import static se.citerus.dddsample.domain.model.cargo.RoutingStatus.*;
-import static se.citerus.dddsample.domain.model.cargo.TransportStatus.*;
 import se.citerus.dddsample.domain.model.handling.HandlingEvent;
 import se.citerus.dddsample.domain.model.handling.HandlingHistory;
 import se.citerus.dddsample.domain.model.location.Location;
@@ -12,25 +10,55 @@ import se.citerus.dddsample.domain.model.voyage.Voyage;
 import se.citerus.dddsample.domain.shared.DomainObjectUtils;
 import se.citerus.dddsample.domain.shared.ValueObject;
 
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Iterator;
+
+import static se.citerus.dddsample.domain.model.cargo.RoutingStatus.*;
+import static se.citerus.dddsample.domain.model.cargo.TransportStatus.*;
 
 /**
  * The actual transportation of the cargo, as opposed to
  * the customer requirement (RouteSpecification) and the plan (Itinerary). 
  *
  */
+@Embeddable
 public class Delivery implements ValueObject<Delivery> {
 
+  @Enumerated(EnumType.STRING)
+  @Column(name = "TRANSPORT_STATUS")
   private TransportStatus transportStatus;
+
+  @ManyToOne()
+  @JoinColumn(name = "LAST_KNOWN_LOCATION_ID", updatable = false, foreignKey = @ForeignKey(name = "last_known_location_fk"))
   private Location lastKnownLocation;
+
+  @ManyToOne
   private Voyage currentVoyage;
+
+  @Column(name = "IS_MISDIRECTED")
   private boolean misdirected;
+
+  @Column(name = "ETA")
+  @Temporal(TemporalType.TIMESTAMP)
   private Date eta;
+
+  @Embedded
   private HandlingActivity nextExpectedActivity;
+
+  @Column(name = "UNLOADED_AT_DEST")
   private boolean isUnloadedAtDestination;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "routing_status")
   private RoutingStatus routingStatus;
+
+  @Column(name = "calculated_at")
+  @Temporal(TemporalType.TIMESTAMP)
   private Date calculatedAt;
+
+  @ManyToOne
+  @JoinColumn(name = "last_event_id", foreignKey = @ForeignKey(name = "last_event_fk"))
   private HandlingEvent lastEvent;
 
   private static final Date ETA_UNKOWN = null;

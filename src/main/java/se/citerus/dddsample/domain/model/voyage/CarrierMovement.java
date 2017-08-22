@@ -6,18 +6,32 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import se.citerus.dddsample.domain.model.location.Location;
 import se.citerus.dddsample.domain.shared.ValueObject;
 
+import javax.persistence.*;
 import java.util.Date;
 
 
 /**
  * A carrier movement is a vessel voyage from one location to another.
  */
+@Entity
+@Table(name = "CarrierMovement")
 public final class CarrierMovement implements ValueObject<CarrierMovement> {
 
-  private Location departureLocation;
-  private Location arrivalLocation;
-  private Date departureTime;
-  private Date arrivalTime;
+    @ManyToOne
+    @JoinColumn(name = "departure_location_id", foreignKey = @ForeignKey(name = "departure_location_fk"))
+    private Location departureLocation;
+
+    @ManyToOne
+    @JoinColumn(name = "arrival_location_id", foreignKey = @ForeignKey(name = "arrival_location_fk"))
+    private Location arrivalLocation;
+
+    @Column(name = "DEPARTURE_TIME", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date departureTime;
+
+    @Column(name = "ARRIVAL_TIME", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date arrivalTime;
 
   // Null object pattern 
   public static final CarrierMovement NONE = new CarrierMovement(
@@ -108,6 +122,8 @@ public final class CarrierMovement implements ValueObject<CarrierMovement> {
   }
 
   // Auto-generated surrogate key
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
 }

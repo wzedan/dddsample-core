@@ -3,6 +3,8 @@ package se.citerus.dddsample.domain.model.location;
 import org.apache.commons.lang.Validate;
 import se.citerus.dddsample.domain.shared.Entity;
 
+import javax.persistence.*;
+
 /**
  * A location is our model is stops on a journey, such as cargo
  * origin or destination, or carrier movement endpoints.
@@ -10,9 +12,13 @@ import se.citerus.dddsample.domain.shared.Entity;
  * It is uniquely identified by a UN Locode.
  *
  */
+@javax.persistence.Entity
 public final class Location implements Entity<Location> {
 
+  @Embedded
   private UnLocode unLocode;
+
+  @Column(name = "name", nullable = false)
   private String name;
 
   /**
@@ -36,6 +42,7 @@ public final class Location implements Entity<Location> {
     this.unLocode = unLocode;
     this.name = name;
   }
+
 
   /**
    * @return UN Locode for this location.
@@ -92,6 +99,8 @@ public final class Location implements Entity<Location> {
     // Needed by Hibernate
   }
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
 }

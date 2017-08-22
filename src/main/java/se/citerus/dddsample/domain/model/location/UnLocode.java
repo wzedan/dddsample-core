@@ -3,6 +3,8 @@ package se.citerus.dddsample.domain.model.location;
 import org.apache.commons.lang.Validate;
 import se.citerus.dddsample.domain.shared.ValueObject;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.util.regex.Pattern;
 
 /**
@@ -11,8 +13,10 @@ import java.util.regex.Pattern;
  * http://www.unece.org/cefact/locode/
  * http://www.unece.org/cefact/locode/DocColumnDescription.htm#LOCODE
  */
+@Embeddable
 public final class UnLocode implements ValueObject<UnLocode> {
 
+  @Column(name = "unlocode", nullable = false, unique = true)
   private String unlocode;
 
   // Country code is exactly two letters.

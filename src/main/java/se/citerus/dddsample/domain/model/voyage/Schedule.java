@@ -4,6 +4,7 @@ import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import se.citerus.dddsample.domain.shared.ValueObject;
 
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,8 +12,11 @@ import java.util.List;
  * A voyage schedule.
  * 
  */
+@Embeddable
 public class Schedule implements ValueObject<Schedule> {
 
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "carrierMovements", foreignKey = @ForeignKey(name = "voyage_fk"))
   private List<CarrierMovement> carrierMovements = Collections.EMPTY_LIST;
 
   public static final Schedule EMPTY = new Schedule();
@@ -52,7 +56,7 @@ public class Schedule implements ValueObject<Schedule> {
     return new HashCodeBuilder().append(this.carrierMovements).toHashCode();
   }
 
-  Schedule() {
+  public Schedule() {
     // Needed by Hibernate
   }
 

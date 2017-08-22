@@ -4,6 +4,8 @@ import org.apache.commons.lang.Validate;
 import se.citerus.dddsample.domain.model.location.Location;
 import se.citerus.dddsample.domain.shared.Entity;
 
+import javax.persistence.Embedded;
+import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,9 +13,13 @@ import java.util.List;
 /**
  * A Voyage.
  */
+@javax.persistence.Entity
 public class Voyage implements Entity<Voyage> {
 
+  @Embedded
   private VoyageNumber voyageNumber;
+
+  @Embedded
   private Schedule schedule;
 
   // Null object pattern
@@ -74,6 +80,7 @@ public class Voyage implements Entity<Voyage> {
   }
 
   // Needed by Hibernate
+  @Id
   private Long id;
 
   /**

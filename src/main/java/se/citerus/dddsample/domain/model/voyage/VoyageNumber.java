@@ -3,12 +3,17 @@ package se.citerus.dddsample.domain.model.voyage;
 import org.apache.commons.lang.Validate;
 import se.citerus.dddsample.domain.shared.ValueObject;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 /**
  * Identifies a voyage.
  * 
  */
+@Embeddable
 public class VoyageNumber implements ValueObject<VoyageNumber> {
 
+  @Column(name = "voyage_number")
   private String number;
 
   public VoyageNumber(String number) {
@@ -47,7 +52,7 @@ public class VoyageNumber implements ValueObject<VoyageNumber> {
     return number;
   }
 
-  VoyageNumber() {
+  public VoyageNumber() {
     // Needed by Hibernate
   }
   

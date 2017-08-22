@@ -7,6 +7,8 @@ import se.citerus.dddsample.domain.model.location.Location;
 import se.citerus.dddsample.domain.shared.DomainObjectUtils;
 import se.citerus.dddsample.domain.shared.Entity;
 
+import javax.persistence.*;
+
 /**
  * A Cargo. This is the central class in the domain model,
  * and it is the root of the Cargo-Itinerary-Leg-Delivery-RouteSpecification aggregate.
@@ -43,13 +45,25 @@ import se.citerus.dddsample.domain.shared.Entity;
  * in port etc), are captured in this aggregate.
  *
  */
+@javax.persistence.Entity
+@Table(name = "Cargo")
 public class Cargo implements Entity<Cargo> {
 
-  private TrackingId trackingId;
-  private Location origin;
-  private RouteSpecification routeSpecification;
-  private Itinerary itinerary;
-  private Delivery delivery;
+    @Embedded
+    private TrackingId trackingId;
+
+    @ManyToOne
+    @JoinColumn(name = "ORIGIN_ID", updatable = false, foreignKey = @ForeignKey(name = "origin_fk"))
+    private Location origin;
+
+    @Embedded
+    private RouteSpecification routeSpecification;
+
+    @Embedded
+    private Itinerary itinerary;
+
+    @Embedded
+    private Delivery delivery;
 
   public Cargo(final TrackingId trackingId, final RouteSpecification routeSpecification) {
     Validate.notNull(trackingId, "Tracking ID is required");
@@ -189,6 +203,8 @@ public class Cargo implements Entity<Cargo> {
   }
 
   // Auto-generated surrogate key
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
 }

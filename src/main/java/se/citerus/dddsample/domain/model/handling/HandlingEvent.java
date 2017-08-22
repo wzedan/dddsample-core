@@ -10,6 +10,7 @@ import se.citerus.dddsample.domain.shared.DomainEvent;
 import se.citerus.dddsample.domain.shared.DomainObjectUtils;
 import se.citerus.dddsample.domain.shared.ValueObject;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -28,14 +29,31 @@ import java.util.Date;
  * <p/>
  * All other events must be of {@link Type#RECEIVE}, {@link Type#CLAIM} or {@link Type#CUSTOMS}.
  */
+@Entity
 public final class HandlingEvent implements DomainEvent<HandlingEvent> {
 
-  private Type type;
-  private Voyage voyage;
-  private Location location;
-  private Date completionTime;
-  private Date registrationTime;
-  private Cargo cargo;
+    @Column(name = "type", columnDefinition = "varchar(12)")
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    @ManyToOne
+    @JoinColumn(name = "voyage_id", foreignKey = @ForeignKey(name = "voyage_fk"))
+    private Voyage voyage;
+
+    @ManyToOne
+    @JoinColumn(name = "location_id", foreignKey = @ForeignKey(name = "location_fk"))
+    private Location location;
+
+    @Column(name = "completion_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date completionTime;
+
+    @Column(name = "registration_time", nullable = false)
+    private Date registrationTime;
+
+    @ManyToOne
+    @JoinColumn(name = "cargo_id", foreignKey = @ForeignKey(name = "cargo_fk"))
+    private Cargo cargo;
 
   /**
    * Handling event type. Either requires or prohibits a carrier movement
@@ -221,6 +239,8 @@ public final class HandlingEvent implements DomainEvent<HandlingEvent> {
 
 
   // Auto-generated surrogate key
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
 }
